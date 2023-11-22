@@ -1,4 +1,5 @@
 
+
 public class Test {
 	String name = "";
 	float number = 1.0f;
