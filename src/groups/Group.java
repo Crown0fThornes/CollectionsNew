@@ -1,5 +1,5 @@
 package groups;
 
-public interface Group {
+public interface Group<T> {
 
 }
