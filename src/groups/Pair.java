@@ -1,9 +1,9 @@
 package groups;
 
 public class Pair<K, V> {
+	
+	public Pair(K key, V value) {
 
-	public Pair() {
-		// TODO Auto-generated constructor stub
 	}
 
 }
