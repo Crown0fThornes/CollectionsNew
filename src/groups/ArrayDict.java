@@ -14,6 +14,7 @@ public class ArrayDict<K, V> implements Group<Pair<K, V>> {
 	 * Adds a Key, Value pair to this
 	 */
 	public void add(Pair<K, V> x) {
+		if (this.has(x.key)) throw new IllegalArgumentException("Duplicate Key");
 		array.add(x);
 		size++;
 	}
@@ -25,6 +26,7 @@ public class ArrayDict<K, V> implements Group<Pair<K, V>> {
 	 * @param value
 	 */
 	public void add(K key, V value) {
+		if (this.has(key)) throw new IllegalArgumentException("Duplicate Key");
 		Pair<K,V> x = new Pair<>(key, value);
 		array.add(x);
 		size++;
