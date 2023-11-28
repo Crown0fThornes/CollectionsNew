@@ -30,19 +30,22 @@ public class ArraySeries<T> {
 	}
 	
 	/**
-	 * Throws exception if {@code i} is unacceptable position for a remove operation on {@this}.
+	 * Throws exception if {@code i} is unacceptable position for a get/remove operation on {@this}.
 	 * 
 	 * @param i
 	 */
 	private void validateGetIndex(int i) {
 		String msg = "Invalid index for ArraySeries: " + i + "; ";
-
 		if(i < 0) throw new ArrayIndexOutOfBoundsException(msg + "ArraySeries cannot have negative index.");
 		if(i > this.size) throw new ArrayIndexOutOfBoundsException(msg + "Index not present in ArraySeries (SIZE: " + this.size + ")");
 
 		
 	}
 	
+	/**
+	 * Add element to the end of this
+	 * @param x
+	 */
 	public void add(T x) {
 		if(this.size == this.array.length) {
 			this.upsize();
@@ -52,6 +55,11 @@ public class ArraySeries<T> {
 		size++;
 	}
 	
+	/**
+	 * Add element to given position of this
+	 * @param pos
+	 * @param x
+	 */
 	@SuppressWarnings("unchecked")
 	public void add(int pos, T x) {
 		this.validateAddIndex(pos);
@@ -66,6 +74,19 @@ public class ArraySeries<T> {
 	}
 	
 	/**
+	 * Add element to any position, fill intermediate indices with null
+	 * @param pos
+	 * @param x
+	 */
+	public void addNoBounds(int pos, T x) {
+		for (int i = 0; i < pos; i++) {
+			if (i > this.size) this.add(null);
+		}
+		this.add(x);
+	}
+	
+	/**
+	 * Remvoe element from given position in this
 	 * 
 	 * @param pos
 	 * 		Position of Element to be removed in the array.
@@ -86,9 +107,12 @@ public class ArraySeries<T> {
 		
 		if (this.size <= Math.sqrt(this.array.length)) this.downsize();
 		
-		return temp;
+		return (T) temp;
 	}
 	
+	/**
+	 * Increase the size of underlying array twofold
+	 */
 	private void upsize() {
 		Object[] newArray = new Object[this.array.length * 2];
 		
@@ -99,6 +123,9 @@ public class ArraySeries<T> {
 		this.array = newArray;
 	}
 	
+	/**
+	 * Decrease the size of underlying array by half
+	 */
 	private void downsize() {
 		Object[] newArray = new Object[this.array.length / 2];
 		
@@ -110,7 +137,7 @@ public class ArraySeries<T> {
 	}
 	
 	/**
-	 * Reduce {@code this.array) to only the size needed for the present elements.
+	 * Decrease size of underlying array to only the size needed for the present elements.
 	 */
 	public void shrink() {
 		Object[] newArray = new Object[this.size];
@@ -122,6 +149,11 @@ public class ArraySeries<T> {
 		this.array = newArray;
 	}
 	
+	/**
+	 * Get the size of this
+	 * 
+	 * @return
+	 */
 	public int size() {
 		return this.size;
 	}
@@ -129,11 +161,15 @@ public class ArraySeries<T> {
 	@SuppressWarnings("unchecked")
 	public T get(int pos) {
 		
-		this.validateRemoveIndex(pos);
+		this.validateGetIndex(pos);
 		
 		return (T) this.array[pos];
 	}
 	
+	/**
+	 * Returns string representing underlying array
+	 * @return
+	 */
 	@SuppressWarnings({ "unchecked", "unused" })
 	private String fullArrayToString() {
 		String res = "[";

@@ -1,5 +1,5 @@
 package main;
-import groups.ArraySeries;
+import groups.*;
 
 import java.lang.reflect.Method;
 import java.util.Scanner;
@@ -34,28 +34,38 @@ public class Main {
 		
 
         //Reflection magic
-		try {
-	        Class<?> myClass = intSeries.getClass();
-	        Method fullArrayToString = null;
-			fullArrayToString = myClass.getDeclaredMethod("fullArrayToString");
-	        fullArrayToString.setAccessible(true);
-	        
-	        for (int i = 0; i < 20; i++) {
-	        	intSeries.add(i);
-	        	if (i == 11) intSeries.shrink();
-	        	System.out.println(fullArrayToString.invoke(intSeries)); 
-	        }
-	        
-	        for (int i = 0; i < 20; i++) {
-	        	intSeries.remove(0);
-	        	if (i == 11) intSeries.shrink();
-	        	System.out.println(fullArrayToString.invoke(intSeries));
-	        }
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+//		try {
+//	        Class<?> myClass = intSeries.getClass();
+//	        Method fullArrayToString = null;
+//			fullArrayToString = myClass.getDeclaredMethod("fullArrayToString");
+//	        fullArrayToString.setAccessible(true);
+//	        
+//	        for (int i = 0; i < 20; i++) {
+//	        	intSeries.add(i);
+//	        	if (i == 11) intSeries.shrink();
+//	        	System.out.println(fullArrayToString.invoke(intSeries)); 
+//	        }
+//	        
+//	        for (int i = 0; i < 20; i++) {
+//	        	intSeries.remove(0);
+//	        	if (i == 11) intSeries.shrink();
+//	        	System.out.println(fullArrayToString.invoke(intSeries));
+//	        }
+//			
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		
+		ArrayDict<String, Integer> map = new ArrayDict<>();
+		
+		for (int i = 0; i < 100; i++) {
+			map.add("" + i, i);
 		}
+		
+		System.out.println(map.get("50"));
+		
 		
 		
 	}
