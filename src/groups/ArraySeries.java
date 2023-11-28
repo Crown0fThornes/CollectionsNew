@@ -16,9 +16,36 @@ public class ArraySeries<T> {
 		array = new Object[DEFAULT_SIZE];
 	}
 	
+	/**
+	 * Throws exception if {@code i} if unacceptable position for an add operation on {@this}.
+	 * 
+	 * @param i
+	 */
+	private void validateAddIndex(int i) {
+		String msg = "Invalid index for ArraySeries: " + i + "; ";
+		if(i < 0) throw new ArrayIndexOutOfBoundsException(msg + "ArraySeries cannot have negative index.");
+		if(i > this.size) throw new ArrayIndexOutOfBoundsException(msg + "Index greater than size of ArraySeries (SIZE: " + this.size + ")");
+
+		
+	}
+	
+	/**
+	 * Throws exception if {@code i} if unacceptable position for a remove operation on {@this}.
+	 * 
+	 * @param i
+	 */
+	private void validateRemoveIndex(int i) {
+		String msg = "Invalid index for ArraySeries: " + i + "; ";
+
+		if(i < 0) throw new ArrayIndexOutOfBoundsException(msg + "ArraySeries cannot have negative index.");
+		if(i > this.size) throw new ArrayIndexOutOfBoundsException(msg + "Index not present in ArraySeries (SIZE: " + this.size + ")");
+
+		
+	}
+	
 	public void add(T x) {
 		if(this.size == this.array.length) {
-			this.updateArray();
+			this.upsize();
 		}
 		
 		this.array[size] = x;
@@ -27,13 +54,7 @@ public class ArraySeries<T> {
 	
 	@SuppressWarnings("unchecked")
 	public void add(int pos, T x) {
-		if(pos < 0) {
-			throw new ArrayIndexOutOfBoundsException("ArraySeries index must be non-negative.");
-		}
-		
-		if(pos > size) {
-			throw new ArrayIndexOutOfBoundsException("Index is greater than size of ArraySeries (SIZE: " + this.size + ")");
-		}
+		this.validateAddIndex(pos);
 		
 		this.add((T) this.array[size-1]);
 		
@@ -51,29 +72,48 @@ public class ArraySeries<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public T remove(int pos) {
-		
-		if(size == 0) {
-			throw new ArrayIndexOutOfBoundsException();
-		}
-		
-		if(pos >= size) {
-			throw new ArrayIndexOutOfBoundsException();
-		}
+		this.validateRemoveIndex(pos);
 		
 		T temp = (T) this.array[pos];
 		
 		//TODO: Make this not shit later.
 		
-		for(int i = pos; i < size; i++) {
+		for(int i = pos; i < size - 1; i++) {
 			this.array[i] = this.array[i+1];
 		}
 		
 		size--;
+		
+		if (this.size <= Math.sqrt(this.array.length)) this.downsize();
+		
 		return temp;
 	}
 	
-	private void updateArray() {
+	private void upsize() {
 		Object[] newArray = new Object[this.array.length * 2];
+		
+		for(int i = 0; i < this.size; i++) {
+			newArray[i] = this.array[i];
+		}
+		
+		this.array = newArray;
+	}
+	
+	private void downsize() {
+		Object[] newArray = new Object[this.array.length / 2];
+		
+		for(int i = 0; i < this.size; i++) {
+			newArray[i] = this.array[i];
+		}
+		
+		this.array = newArray;
+	}
+	
+	/**
+	 * Reduce {@code this.array) to only the size needed for the present elements.
+	 */
+	public void shrink() {
+		Object[] newArray = new Object[this.size];
 		
 		for(int i = 0; i < this.size; i++) {
 			newArray[i] = this.array[i];
@@ -98,6 +138,17 @@ public class ArraySeries<T> {
 		}
 		
 		return (T) this.array[pos];
+	}
+	
+	@SuppressWarnings({ "unchecked", "unused" })
+	private String fullArrayToString() {
+		String res = "[";
+		for (Object cur : this.array) {
+			if (cur == null) res += "null,";
+			else res += ((T) cur).toString() + ",";
+		}
+		res = res.substring(0, res.length() - 1) + "]";
+		return res;
 	}
 
 }
