@@ -129,13 +129,7 @@ public class ArraySeries<T> {
 	@SuppressWarnings("unchecked")
 	public T get(int pos) {
 		
-		if(pos >= size) {
-			throw new ArrayIndexOutOfBoundsException("Index is greater than ArraySeries Size.");
-		}
-		
-		if(pos < 0) {
-			throw new ArrayIndexOutOfBoundsException();
-		}
+		this.validateRemoveIndex(pos);
 		
 		return (T) this.array[pos];
 	}
