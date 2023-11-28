@@ -17,7 +17,7 @@ public class ArraySeries<T> {
 	}
 	
 	/**
-	 * Throws exception if {@code i} if unacceptable position for an add operation on {@this}.
+	 * Throws exception if {@code i} is unacceptable position for an add operation on {@this}.
 	 * 
 	 * @param i
 	 */
@@ -30,11 +30,11 @@ public class ArraySeries<T> {
 	}
 	
 	/**
-	 * Throws exception if {@code i} if unacceptable position for a remove operation on {@this}.
+	 * Throws exception if {@code i} is unacceptable position for a remove operation on {@this}.
 	 * 
 	 * @param i
 	 */
-	private void validateRemoveIndex(int i) {
+	private void validateGetIndex(int i) {
 		String msg = "Invalid index for ArraySeries: " + i + "; ";
 
 		if(i < 0) throw new ArrayIndexOutOfBoundsException(msg + "ArraySeries cannot have negative index.");
@@ -72,7 +72,7 @@ public class ArraySeries<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public T remove(int pos) {
-		this.validateRemoveIndex(pos);
+		this.validateGetIndex(pos);
 		
 		T temp = (T) this.array[pos];
 		
