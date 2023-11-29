@@ -1,6 +1,8 @@
 package groups;
 
-public class ArraySeries<T> {
+import java.util.Iterator;
+
+public class ArraySeries<T> implements Iterable<T> {
 	
 	private Object[] array;
 	
@@ -180,6 +182,32 @@ public class ArraySeries<T> {
 		res = res.substring(0, res.length() - 1) + "]";
 		return res;
 	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return new ArraySeriesIterator();
+	}
+	
+    private class ArraySeriesIterator implements Iterator<T> {
+        private int currentIndex = 0;
+       
+        private ArraySeriesIterator() {}
+
+        @Override
+        public boolean hasNext() {
+            return this.currentIndex < ArraySeries.this.size;
+        }
+
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new UnsupportedOperationException("No more elements in ArraySeries.");
+            }
+            T element = (T) ArraySeries.this.array[this.currentIndex];
+            this.currentIndex++;
+            return element;
+        }
+    }
 
 }
 

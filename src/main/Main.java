@@ -2,6 +2,7 @@ package main;
 import groups.*;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -58,13 +59,19 @@ public class Main {
 //		}
 		
 		
-		ArrayDict<String, Integer> map = new ArrayDict<>();
+//		ArrayDict<String, Integer> map = new ArrayDict<>();
+//		
+//		for (int i = 0; i < 100; i++) {
+//			map.add("" + i, i);
+//		}
+//		
+//		System.out.println(map.get("50"));
 		
-		for (int i = 0; i < 100; i++) {
-			map.add("" + i, i);
-		}
+
+		ArraySeries<Integer> nums = new ArraySeries<>();
+		for (int i = 0; i < 10; i++) nums.add(i);
 		
-		System.out.println(map.get("50"));
+		for (int num : nums) System.out.println(num);
 		
 		
 		
