@@ -1,5 +1,7 @@
 package groups;
 
+import java.util.Iterator;
+
 public class ArrayDict<K, V> implements Group<Pair<K, V>> {
 
 	private ArraySeries<Pair<K,V>> array;
@@ -84,6 +86,18 @@ public class ArrayDict<K, V> implements Group<Pair<K, V>> {
 			if (this.array.get(i).key.equals(key))
 				return (V) this.array.remove(i).value;
 		return null;
+	}
+
+	@Override
+	public Iterator<Pair<K, V>> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

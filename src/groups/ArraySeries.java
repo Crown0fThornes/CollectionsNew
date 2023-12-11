@@ -2,11 +2,41 @@ package groups;
 
 import java.util.Iterator;
 
-public class ArraySeries<T> implements Iterable<T> {
+/**
+ * Wraps the java array type as a Series.
+ * 
+ * The size/capacity of this adapts as the user adds or removes elements. 
+ * Size refers to the number of elements in this, while capacity refers to the internal array size
+ * that 
+ * Once the current size fills up, the capacity is doubled. 
+ * When items are removed such that ArraySeries is using excess unneeded memory (used < sqrt(size)),
+ * the capacity is halved.
+ * 
+ * @author Lincoln Edsall, Benjamin Lampe
+ *
+ * @param <T> the elements of this
+ */
+public class ArraySeries<T> implements Group<T>, Ordered {
 	
+	/**
+	 * Contains the elements of this.
+	 */
 	private Object[] array;
 	
+	/**
+	 * The size of this, which varies from the length of {@code array}.
+	 * While this may contain 10 elements added by the user and thus {@code size} = 10,
+	 * the length of {@code array} may be 20 with null or irrelevant items past position 10.
+	 * If, for optimization reasons or otherwise, the user wishes to reduce {@code array} 
+	 * to only the necessary indices, shrink() can be used.
+	 * 
+	 */
 	private int size = 0;
+	
+	/**
+	 * The user can choose to set a capacity for this using set_capacity(), which limits the size of this.
+	 */
+	private int max_capacity = -1;
 	
 	private final int DEFAULT_SIZE = 10;
 	
@@ -25,9 +55,9 @@ public class ArraySeries<T> implements Iterable<T> {
 	 */
 	private void validateAddIndex(int i) {
 		String msg = "Invalid index for ArraySeries: " + i + "; ";
-		if(i < 0) throw new ArrayIndexOutOfBoundsException(msg + "ArraySeries cannot have negative index.");
-		if(i > this.size) throw new ArrayIndexOutOfBoundsException(msg + "Index greater than size of ArraySeries (SIZE: " + this.size + ")");
-
+		if(i < 0) throw new IndexOutOfBoundsException(msg + "ArraySeries cannot have negative index.");
+		if(i > this.size) throw new IndexOutOfBoundsException(msg + "Index greater than size of ArraySeries (SIZE: " + this.size + ")");
+		if(i >= this.max_capacity) throw new IndexOutOfBoundsException(msg + "ArraySeries max capacity set to " + this.max_capacity);
 		
 	}
 	
@@ -38,8 +68,8 @@ public class ArraySeries<T> implements Iterable<T> {
 	 */
 	private void validateGetIndex(int i) {
 		String msg = "Invalid index for ArraySeries: " + i + "; ";
-		if(i < 0) throw new ArrayIndexOutOfBoundsException(msg + "ArraySeries cannot have negative index.");
-		if(i > this.size) throw new ArrayIndexOutOfBoundsException(msg + "Index not present in ArraySeries (SIZE: " + this.size + ")");
+		if(i < 0) throw new IndexOutOfBoundsException(msg + "ArraySeries cannot have negative index.");
+		if(i >= this.size) throw new IndexOutOfBoundsException(msg + "Index not present in ArraySeries (SIZE: " + this.size + ")");
 
 		
 	}
@@ -198,7 +228,8 @@ public class ArraySeries<T> implements Iterable<T> {
             return this.currentIndex < ArraySeries.this.size;
         }
 
-        @Override
+        @SuppressWarnings("unchecked")
+		@Override
         public T next() {
             if (!hasNext()) {
                 throw new UnsupportedOperationException("No more elements in ArraySeries.");
@@ -208,6 +239,13 @@ public class ArraySeries<T> implements Iterable<T> {
             return element;
         }
     }
+
+	@Override
+	public void clear() {
+		this.size = 0;
+		this.array = new Object[0];
+		
+	}
 
 }
 

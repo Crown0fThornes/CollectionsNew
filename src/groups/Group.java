@@ -1,8 +1,10 @@
 package groups;
 
-public interface Group<T> {
+public interface Group<T> extends Iterable<T> {
 
 	void add(T x);
+	
+	void clear();
 	
 	
 }

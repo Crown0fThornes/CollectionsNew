@@ -1,80 +1,23 @@
 package main;
-import groups.*;
+import java.lang.reflect.*;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Scanner;
+import groups.*;
 
 public class Main {
 
-	public static void main(String[] args) {
-		ArraySeries<Integer> intSeries = new ArraySeries<>();
-//		Scanner input = new Scanner(System.in);
+	public static void main(String[] args) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
-//		for(int i = 0; i < 10; i++) {
-//			intSeries.add(i);
-//		}
-//		
-//		int next = input.nextInt();
-//		
-//		while(next != -1) {
-//			for(int i = 0; i < intSeries.size(); i++) {
-//				System.out.print(intSeries.get(i) + ", ");
-//			}
-//			
-//			System.out.println("");
-//			
-//			intSeries.add(next, 0);
-//			
-//			for(int i = 0; i < intSeries.size(); i++) {
-//				System.out.print(intSeries.get(i) + ", ");
-//			}
-//			
-//			next = input.nextInt();
-//		}
-		
+		LinkedSeries<Integer> list = new LinkedSeries<>();
 
-        //Reflection magic
-//		try {
-//	        Class<?> myClass = intSeries.getClass();
-//	        Method fullArrayToString = null;
-//			fullArrayToString = myClass.getDeclaredMethod("fullArrayToString");
-//	        fullArrayToString.setAccessible(true);
-//	        
-//	        for (int i = 0; i < 20; i++) {
-//	        	intSeries.add(i);
-//	        	if (i == 11) intSeries.shrink();
-//	        	System.out.println(fullArrayToString.invoke(intSeries)); 
-//	        }
-//	        
-//	        for (int i = 0; i < 20; i++) {
-//	        	intSeries.remove(0);
-//	        	if (i == 11) intSeries.shrink();
-//	        	System.out.println(fullArrayToString.invoke(intSeries));
-//	        }
-//			
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		for (int i = 0; i < 10; i++) list.add(i);
+		
+		list.remove(5);
+		
+		try { for (int i = 0; i < list.size() + 2; i++) System.out.println(list.get(i)); }
+		catch (Exception e) { e.printStackTrace(); }
 		
 		
-//		ArrayDict<String, Integer> map = new ArrayDict<>();
-//		
-//		for (int i = 0; i < 100; i++) {
-//			map.add("" + i, i);
-//		}
-//		
-//		System.out.println(map.get("50"));
-		
-
-		ArraySeries<Integer> nums = new ArraySeries<>();
-		for (int i = 0; i < 10; i++) nums.add(i);
-		
-		for (int num : nums) System.out.println(num);
-		
-		
-		
+		for (int cur : list) System.out.println(cur);
 	}
 
 }
