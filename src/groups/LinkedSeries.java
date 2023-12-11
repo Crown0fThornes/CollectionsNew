@@ -1,6 +1,7 @@
 package groups;
 
 import java.util.Iterator;
+import java.util.function.Predicate;
 
 /**
  * Doubly Linked Series.
@@ -61,8 +62,6 @@ public class LinkedSeries<T> implements Group<T>, Ordered {
 		this.postTail = new Node();
 		this.preHead.next = this.postTail;
 		this.postTail.prev = this.preHead;
-		this.preHead.prev = BOUND_MARKER;
-		this.postTail.next = BOUND_MARKER;
 	}
 	
 	/**
@@ -160,6 +159,8 @@ public class LinkedSeries<T> implements Group<T>, Ordered {
 			if (i > this.size) this.add(null);
 		}
 		this.add(pos, x);
+		
+		this.size++;
 	}
 	
 	/**
@@ -195,11 +196,63 @@ public class LinkedSeries<T> implements Group<T>, Ordered {
 	}
 	
 	public T get(int pos) {
-		
 		this.validateGetIndex(pos);
 		return this.getNodeAt(pos).e;
+	}
+	
+	@Override
+	public void clear() {
+		this.preHead = new Node();
+		this.postTail = new Node();
+		this.preHead.next = this.postTail;
+		this.postTail.prev = this.preHead;
 		
+	}
+	
+	public boolean contains(T key) {
+		Node current = this.preHead;
+		while ((current = current.next) != this.postTail) {
+			if (key.equals(current.e)) return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Removes all elements of this that do not pass {@code test}
+	 * 
+	 * @param test	predicate functional interface
+	 */
+	public void filter(Predicate<T> test) {
+		int removed = 0;
+		Node current = this.preHead;
+		while ((current = current.next) != this.postTail) {
+			if (!test.test(current.e)) {
+				current.prev.next = current.next;
+				current.next.prev = current.prev;
+				removed++;
+			}
+		}
+		this.size -= removed;
+	}
+	
+	/**
+	 * Returns a LinkedList with only the elements of this that pass {@code test}
+	 * 
+	 * @param test	predicate functional interface
+	 */
+	public LinkedSeries<T> filtered(Predicate<T> test) {
 		
+		LinkedSeries<T> res = new LinkedSeries<>();
+		
+		int removed = 0;
+		Node current = this.preHead;
+		while ((current = current.next) != this.postTail) {
+			if (test.test(current.e)) {
+				res.add(current.e);
+			}
+		}
+		
+		return res;
 	}
 	
 	/**
@@ -215,17 +268,6 @@ public class LinkedSeries<T> implements Group<T>, Ordered {
 		}
 		res = res.substring(0, res.length() - 1) + "]";
 		return res;
-	}
-
-
-	@Override
-	public void clear() {
-		this.preHead = new Node();
-		this.postTail = new Node();
-		this.preHead.next = this.postTail;
-		this.postTail.prev = this.preHead;
-		this.preHead.prev = BOUND_MARKER;
-		this.postTail.next = BOUND_MARKER;
 	}
 	
 	@Override
@@ -252,6 +294,7 @@ public class LinkedSeries<T> implements Group<T>, Ordered {
             this.nextNode = this.nextNode.next;
             return element;
         }
+		
     }
 
 }

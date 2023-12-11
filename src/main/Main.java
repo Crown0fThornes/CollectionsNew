@@ -10,14 +10,28 @@ public class Main {
 		LinkedSeries<Integer> list = new LinkedSeries<>();
 
 		for (int i = 0; i < 10; i++) list.add(i);
+
+		print(list);
 		
-		list.remove(5);
+		list.filter(n -> n % 2 == 0);
 		
-		try { for (int i = 0; i < list.size() + 2; i++) System.out.println(list.get(i)); }
-		catch (Exception e) { e.printStackTrace(); }
+		print(list);
 		
-		
-		for (int cur : list) System.out.println(cur);
+	}
+	
+	public static void print(LinkedSeries<Integer> l) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+
+        // Get the Class object for the MyClass
+        Class<?> myClass = l.getClass();
+
+        // Get the declared method by name
+        Method print = myClass.getDeclaredMethod("fullArrayToString");
+
+        // Enable access to the private method
+        print.setAccessible(true);
+
+        // Invoke the private method on an instance of the class
+        System.out.println(print.invoke(l));
 	}
 
 }

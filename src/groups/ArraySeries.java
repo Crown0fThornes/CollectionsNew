@@ -84,7 +84,7 @@ public class ArraySeries<T> implements Group<T>, Ordered {
 		}
 		
 		this.array[size] = x;
-		size++;
+		this.size++;
 	}
 	
 	/**
@@ -103,6 +103,8 @@ public class ArraySeries<T> implements Group<T>, Ordered {
 		}
 		
 		this.array[pos] = x;
+		
+		this.size++;
 	}
 	
 	/**
