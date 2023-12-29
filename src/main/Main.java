@@ -15,6 +15,8 @@ public class Main {
 		}
 		System.out.println(res);
 		
+		
+		
 	}
 	
 	public static LinkedSeries<Integer> linkedRange(int startInc, int endExc, int step) {

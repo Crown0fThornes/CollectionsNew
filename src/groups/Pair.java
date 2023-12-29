@@ -1,11 +1,13 @@
 package groups;
 
-public class Tuple<K,V> {
+import javax.print.attribute.standard.MediaSize.Other;
+
+public class Pair<K,V> {
 	
 	public K key;
 	public V value;
 
-	public Tuple(K key, V value) {
+	public Pair(K key, V value) {
 		this.key = key;
 		this.value = value;
 	}
@@ -16,8 +18,12 @@ public class Tuple<K,V> {
 	}
 	
 	@Override
-	public Boolean equals(Object o) {
-		
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (!(o instanceof Pair)) return false;
+		@SuppressWarnings("unchecked")
+		Pair<K,V> b = (Pair<K,V>) o;
+		return this.key.equals(b.key) && this.value.equals(b.value);
 	}
 	
 }
