@@ -11,6 +11,7 @@ public class BSTMap<K extends Comparable<K>, V> {
 	private class TreeNode {
 		TreeNode leftChild = BOUND_MARKER;
 		TreeNode rightChild = BOUND_MARKER;
+		TreeNode parent = BOUND_MARKER;
 		Pair<K,V> e;
 	}
 	
@@ -38,6 +39,7 @@ public class BSTMap<K extends Comparable<K>, V> {
 					cur = cur.leftChild;
 				} else {
 					cur.leftChild = insert;
+					cur.leftChild.parent = cur;
 					break;
 				}
 			}
@@ -47,6 +49,7 @@ public class BSTMap<K extends Comparable<K>, V> {
 					cur = cur.rightChild;
 				} else {
 					cur.rightChild = insert;
+					cur.rightChild.parent = cur;
 					break;
 				}
 			}
@@ -127,18 +130,86 @@ public class BSTMap<K extends Comparable<K>, V> {
 		}
 	}
 	
-	public void remove(K target) {
+	public Pair<K, V> remove(K target) {
 		if (!this.contains(target)) throw new IllegalArgumentException();
 		
-		TreeNode bottomLeft = root;
-		while (bottomLeft.leftChild != BOUND_MARKER) bottomLeft = bottomLeft.rightChild;
+		// Find node to be removed
+		TreeNode cur = this.root;
 		
+		while(true) {
+			//Current node is the node to be removed
+			if(cur.e.key.equals(target)) break;
+			
+			//Continue searching for target node
+			
+			if(cur.e.key.compareTo(target) > 0) {
+				//Go Left
+				cur = cur.leftChild;
+			} else {
+				//Go Right
+				cur = cur.rightChild;
+			}
+		}
 		
+		//Saving the current e value to return.
+		Pair<K, V> e = cur.e;
 		
+		/*
+		 * Current node is target node.
+		 * 
+		 * Next step is too remove the target node and fix the BST
+		 */
+		
+		//Case where removed node has no children.
+		if(cur.rightChild == this.BOUND_MARKER && cur.leftChild == this.BOUND_MARKER) {
+			if(cur.parent.rightChild == cur) {
+				cur.parent.rightChild = this.BOUND_MARKER;
+			} else {
+				cur.parent.leftChild = this.BOUND_MARKER;
+			}
+			return e;
+		}
+		
+		//Case where removed node has children.
+		if(height(cur.leftChild) > height(cur.rightChild)) {
+			/*
+			 * Taking from the left side of the tree.
+			 * 
+			 * We want to find the largest child on the left tree.
+			 */
+			TreeNode largestLeft = getLargest(cur.leftChild);
+			
+			largestLeft.parent.rightChild = largestLeft.leftChild;
+			largestLeft.leftChild.parent = largestLeft.parent;
+			cur.e = largestLeft.e;
+		} else {
+			/*
+			 * Taking from the right side of the tree
+			 * 
+			 * We want to find the smallest child on the right tree
+			 */
+			TreeNode smallestRight = getSmallest(cur.rightChild);
+			
+			smallestRight.parent.leftChild = smallestRight.rightChild;
+			smallestRight.rightChild.parent = smallestRight.parent;
+			cur.e = smallestRight.e;
+		}
+		
+		this.balance();
+		
+		return e;
 	}
 	
-	public void siftDown() {
+	public TreeNode getLargest(TreeNode root) {
+		if(root.rightChild == this.BOUND_MARKER) return root;
 		
+		return getLargest(root.rightChild);
+	}
+	
+	public TreeNode getSmallest(TreeNode root) {
+		if(root.leftChild == this.BOUND_MARKER) return root;
+		
+		return getSmallest(root.leftChild);
 	}
 	
 	public int size() {
@@ -164,16 +235,21 @@ public class BSTMap<K extends Comparable<K>, V> {
 			
 			TreeNode lChild = this.root.leftChild;
 			this.root.leftChild = lChild.rightChild;
+			lChild.rightChild.parent = this.root;
 			lChild.rightChild = this.root;
+			this.root.parent = lChild;
+			lChild.parent = this.BOUND_MARKER;
 			this.root = lChild;
 			
 		} else if (rHeight - lHeight >= 2) {
 			
 			TreeNode rChild = this.root.rightChild;
 			this.root.rightChild = rChild.leftChild;
+			rChild.leftChild.parent = this.root;
 			rChild.leftChild = this.root;
+			this.root.parent = rChild;
+			rChild.parent = this.BOUND_MARKER;
 			this.root = rChild;
-			
 		}
 		
 	}
