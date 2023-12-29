@@ -1,6 +1,8 @@
 package groups;
 
 import java.util.Iterator;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Wraps the java array type as a Series.
@@ -16,7 +18,7 @@ import java.util.Iterator;
  *
  * @param <T> the elements of this
  */
-public class ArraySeries<T> implements Group<T>, Ordered {
+public class ArraySeries<T> extends AbstractSeries<T> {
 	
 	/**
 	 * Contains the elements of this.
@@ -36,7 +38,7 @@ public class ArraySeries<T> implements Group<T>, Ordered {
 	/**
 	 * The user can choose to set a capacity for this using set_capacity(), which limits the size of this.
 	 */
-	private int max_capacity = -1;
+	private int max_capacity = Integer.MAX_VALUE;
 	
 	private final int DEFAULT_SIZE = 10;
 	
@@ -92,17 +94,18 @@ public class ArraySeries<T> implements Group<T>, Ordered {
 	 * @param pos
 	 * @param x
 	 */
-	@SuppressWarnings("unchecked")
 	public void add(int pos, T x) {
-		this.validateAddIndex(pos);
+		this.validateGetIndex(pos);
 		
-		this.add((T) this.array[size-1]);
-		
-		for(int i = size-1; i > pos; i--) {
-			this.array[i] = this.array[i-1];
+		if(this.size == this.array.length) {
+			this.upsize();
 		}
 		
-		this.array[pos] = x;
+	    for (int i = size; i > pos; i--) {
+	        this.array[i] = this.array[i - 1];
+	    }
+		
+		this.array[pos] = (T) x;
 		
 		this.size++;
 	}
@@ -117,6 +120,7 @@ public class ArraySeries<T> implements Group<T>, Ordered {
 			if (i > this.size) this.add(null);
 		}
 		this.add(x);
+		this.size++;
 	}
 	
 	/**
@@ -137,7 +141,7 @@ public class ArraySeries<T> implements Group<T>, Ordered {
 			this.array[i] = this.array[i+1];
 		}
 		
-		size--;
+		this.size--;
 		
 		if (this.size <= Math.sqrt(this.array.length)) this.downsize();
 		
@@ -237,6 +241,7 @@ public class ArraySeries<T> implements Group<T>, Ordered {
                 throw new UnsupportedOperationException("No more elements in ArraySeries.");
             }
             T element = (T) ArraySeries.this.array[this.currentIndex];
+            if (element == null) throw new NullPointerException();
             this.currentIndex++;
             return element;
         }
@@ -248,6 +253,46 @@ public class ArraySeries<T> implements Group<T>, Ordered {
 		this.array = new Object[0];
 		
 	}
+	
+    public static <T, O> ArraySeries<O> generate(Group<T> g, Predicate<T> test, Function<T, O> output) {
+    	ArraySeries<O> res = new ArraySeries<>();
+    	
+    	for (T e : g) {
+    		if (test.test(e)) res.add(output.apply(e));
+    	}
+    	
+    	return res;
+    }
+
+//	@Override
+//	public void add(T e, int pos) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+
+//	@Override
+//	public void addIgnoreSize(T e, int pos) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public T get(T e) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public void filter(Predicate<T> removeIfFail) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public AbstractSeries<T> filtered(Predicate<T> rejectIfFail) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 }
 

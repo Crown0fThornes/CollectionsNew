@@ -1,7 +1,10 @@
 package groups;
 
 import java.util.Iterator;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * Doubly Linked Series.
@@ -14,7 +17,7 @@ import java.util.function.Predicate;
  *
  * @param <T> the elements of this
  */
-public class LinkedSeries<T> implements Group<T>, Ordered {
+public class LinkedSeries<T> extends AbstractSeries<T> {
 	
 	
 	static int val = 0;
@@ -51,7 +54,7 @@ public class LinkedSeries<T> implements Group<T>, Ordered {
 	/**
 	 * The user can choose to set a capacity for this using set_capacity(), which limits the size of this.
 	 */
-	private int max_capacity = -1;
+	private int max_capacity = Integer.MAX_VALUE;
 	
 	
 	/**
@@ -134,7 +137,7 @@ public class LinkedSeries<T> implements Group<T>, Ordered {
 	 * @param x
 	 */
 	public void add(int pos, T x) {
-	    validateAddIndex(pos);
+	    validateGetIndex(pos);
 
 	    Node after = this.getNodeAt(pos);
 	    
@@ -183,7 +186,6 @@ public class LinkedSeries<T> implements Group<T>, Ordered {
 	    size--;
 	    
 	    return res;
-		
 	}
 	
 	/**
@@ -218,11 +220,11 @@ public class LinkedSeries<T> implements Group<T>, Ordered {
 	}
 	
 	/**
-	 * Removes all elements of this that do not pass {@code test}
+	 * Removes all elements of this that pass {@code test}
 	 * 
 	 * @param test	predicate functional interface
 	 */
-	public void filter(Predicate<T> test) {
+	public void keepIf(Predicate<T> test) {
 		int removed = 0;
 		Node current = this.preHead;
 		while ((current = current.next) != this.postTail) {
@@ -240,7 +242,45 @@ public class LinkedSeries<T> implements Group<T>, Ordered {
 	 * 
 	 * @param test	predicate functional interface
 	 */
-	public LinkedSeries<T> filtered(Predicate<T> test) {
+	public LinkedSeries<T> keptIf(Predicate<? super T> test) {
+		
+		LinkedSeries<T> res = new LinkedSeries<>();
+		
+		int removed = 0;
+		Node current = this.preHead;
+		while ((current = current.next) != this.postTail) {
+			if (!test.test(current.e)) {
+				res.add(current.e);
+			}
+		}
+		
+		return res;
+	}
+	
+	/**
+	 * Removes all elements of this that fail {@code test}
+	 * 
+	 * @param test	predicate functional interface
+	 */
+	public void removeIf(Predicate<T> test) {
+		int removed = 0;
+		Node current = this.preHead;
+		while ((current = current.next) != this.postTail) {
+			if (test.test(current.e)) {
+				current.prev.next = current.next;
+				current.next.prev = current.prev;
+				removed++;
+			}
+		}
+		this.size -= removed;
+	}
+	
+	/**
+	 * Returns a LinkedList with only the elements of this that fail {@code test}
+	 * 
+	 * @param test	predicate functional interface
+	 */
+	public LinkedSeries<T> removedIf(Predicate<T> test) {
 		
 		LinkedSeries<T> res = new LinkedSeries<>();
 		
@@ -255,19 +295,11 @@ public class LinkedSeries<T> implements Group<T>, Ordered {
 		return res;
 	}
 	
-	/**
-	 * Returns string representing underlying array
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	private String fullArrayToString() {
-		String res = "[";
-		for (T cur : this) {
-			if (cur == null) res += "null,";
-			else res += ((T) cur).toString() + ",";
+	public void forEach(Consumer<? super T> action) {
+		Node current = this.preHead;
+		while ((current = current.next) != this.postTail) {
+			action.accept(current.e);
 		}
-		res = res.substring(0, res.length() - 1) + "]";
-		return res;
 	}
 	
 	@Override
@@ -296,6 +328,54 @@ public class LinkedSeries<T> implements Group<T>, Ordered {
         }
 		
     }
+    
+    @Override
+    public boolean equals(Object o) {
+    	if (o == this) return true;
+    	if (o == null) return false;
+    	if (!(o instanceof LinkedSeries)) return false;
+		LinkedSeries<?> test = (LinkedSeries<?>) o;
+    	if (this.size() != test.size()) return false;
+    	
+    	Iterator<T> a = this.iterator();
+    	Iterator<?> b = test.iterator();
+    	
+    	while (a.hasNext()) {
+    		if (!a.next().equals(b.next())) 
+    			return false;
+    	}
+    	
+    	return true;
+    	
+    }
+    
+    public static <T, O> LinkedSeries<O> generate(Group<T> g, Predicate<T> test, Function<T, O> output) {
+    	LinkedSeries<O> res = new LinkedSeries<>();
+    	
+    	for (T e : g) {
+    		if (test.test(e)) res.add(output.apply(e));
+    	}
+    	
+    	return res;
+    }
+    
+	@SuppressWarnings("unused")
+	private String fullArrayToString() {
+		if (this.size() == 0) return "[]";
+		String res = "[";
+		for (T cur : this) {
+			if (cur == null) res += "null,";
+			else res += ((T) cur).toString() + ",";
+		}
+		res = res.substring(0, res.length() - 1) + "]";
+		return res;
+	}
+
+//	@Override
+//	void add(T e, int pos) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 
 }
 
