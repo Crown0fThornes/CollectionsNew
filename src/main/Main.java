@@ -1,6 +1,7 @@
 package main;
 import java.lang.reflect.*;
 import java.util.Arrays;
+import java.util.Random;
 
 import groups.*;
 
@@ -8,14 +9,27 @@ public class Main {
 
 	public static void main(String[] args) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
-		int res = 0;
+		BSTMap<String, Integer> test = new BSTMap<>();
 		
-		for (int i = 0; i < 100; i++) {
-		 res += speedTest();
+		System.out.println();
+		
+		for (int i = 0; i < 10; i++) {
+			int key = getRandomNumber(0, 100);
+			test.put("" + key, i);
+//			test.printTreeLineByLine();
 		}
-		System.out.println(res);
 		
+		test.printTreeLineByLine();
+	
 		
+//		int res = 0;
+//		
+//		for (int i = 0; i < 100; i++) {
+//		 res += speedTest();
+//		}
+//		System.out.println(res);
+//		
+//		
 		
 	}
 	
