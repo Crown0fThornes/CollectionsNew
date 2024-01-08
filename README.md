@@ -44,3 +44,6 @@ Ordered set of key : value pairs. Keys must be unique.
 Uses: Less efficient than Map but can be useful for conveniently keeping track of insertion order
 
 Canon implementations: ArrayDict (layered on ArraySeries)
+
+## Support Classes
+- Pair (key:value tuple, used for Map elements in some implementatins)
