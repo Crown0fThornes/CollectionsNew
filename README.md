@@ -9,11 +9,21 @@ Groups can vary widely in their permitted behvaior and underlying representation
 All implementations are a work in progress, but usable (all implemented functionality varified for accuracy) Groups include:
 
 ## Series
-Enumerated series of elements.
+Enumerated list of elements.
 
 Uses: Easily access, add, remove, any element like a 'primitive' array
 
 Canon implementations: ArraySeries (wrapped array), LinkedSeries (doubly linked)
+
+## Queue
+Ordered FIFO list of elements
+
+Uses: Access elements in insertion order
+
+## Stack
+Ordered LIFO list of elements
+
+Uses: Access elements in reverse insertion order
 
 ## Set
 Unordered set of unique elements.
