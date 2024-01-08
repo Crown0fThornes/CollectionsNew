@@ -11,17 +11,26 @@ All implementations are a work in progress, but usable (all implemented function
 ## Series
 Enumerated series of elements.
 
+Uses: Easily access, add, remove, any element like a 'primitive' array
+
 Canon implementations: ArraySeries (wrapped array), LinkedSeries (doubly linked)
 
 ## Set
 Unordered set of unique elements.
+
+Uses: Quickly check if an element is contained, must be unique
+
 
 ## Map
 Unordered set of keys : value pairs. Keys must be unique.
 
 Canon implementations: BSTMap (self balancing binary search tree)
 
+Uses: Matching keys to values
+
 ## Dict
-Ordered set of key : value pairs. Keys must be unique.
+Ordered set of key : value pairs. Keys must be unique. 
+
+Uses: Less efficient than Map but can be useful for conveniently keeping track of insertion order
 
 Canon implementations: ArrayDict (layered on ArraySeries)
