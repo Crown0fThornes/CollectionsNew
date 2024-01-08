@@ -34,9 +34,9 @@ Uses: Quickly check if an element is contained, must be unique
 ## Map
 Unordered set of keys : value pairs. Keys must be unique.
 
-Canon implementations: BSTMap (self balancing binary search tree)
-
 Uses: Matching keys to values
+
+Canon implementations: BSTMap (self balancing binary search tree)
 
 ## Dict
 Ordered set of key : value pairs. Keys must be unique. 
